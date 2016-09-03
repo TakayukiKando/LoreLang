@@ -8,7 +8,7 @@ package org.xgmtk.lore.ast.tree;
 /**
  * Interface of attribute "name".
  * 
- * @author kando
+ * @author Takayuki,Kando <develop@xgmtk.org>
  * @param <T> The type parameter T specifies the type of attribute value.
  */
 public interface ASTAttribute<T> {
