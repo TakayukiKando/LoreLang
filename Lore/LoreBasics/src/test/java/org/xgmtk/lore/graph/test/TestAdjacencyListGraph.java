@@ -23,7 +23,6 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import org.xgmtk.lore.graph.AdjacencyListGraph;
 import org.xgmtk.lore.graph.Graph;
-import org.xgmtk.lore.graph.GenericGraphBuilder;
 
 /**
  *

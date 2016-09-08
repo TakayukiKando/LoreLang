@@ -17,7 +17,6 @@ package org.xgmtk.lore.graph.test;
 
 import java.util.Objects;
 import java.util.function.Predicate;
-import org.xgmtk.lore.graph.GenericGraphBuilder;
 import org.xgmtk.lore.graph.Graph;
 
 /**

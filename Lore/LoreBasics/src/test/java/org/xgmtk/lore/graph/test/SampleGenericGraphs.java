@@ -17,12 +17,9 @@ package org.xgmtk.lore.graph.test;
 
 import java.util.Arrays;
 import java.util.List;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static org.xgmtk.lore.graph.test.SampleNodeData.nameMatch;
 
 
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import java.util.stream.IntStream;

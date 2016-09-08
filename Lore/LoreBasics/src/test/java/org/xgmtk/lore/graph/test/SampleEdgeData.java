@@ -15,9 +15,6 @@
  */
 package org.xgmtk.lore.graph.test;
 
-import org.xgmtk.lore.graph.GenericGraphBuilder;
-import static org.xgmtk.lore.graph.test.SampleNodeData.nameMatch;
-
 /**
  *
  * @author Takayuki,Kando <develop@xgmtk.org>

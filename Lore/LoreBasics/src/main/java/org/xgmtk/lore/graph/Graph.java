@@ -15,7 +15,6 @@
  */
 package org.xgmtk.lore.graph;
 
-import java.io.PrintStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
