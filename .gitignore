@@ -1,2 +1,5 @@
 /Lore/.nb-gradle/
 /Lore/LoreAST/build/
+/Lore/LoreBasics/build/
+/Lore/LoreBasics/.nb-gradle/
+/Lore/.gradle/
