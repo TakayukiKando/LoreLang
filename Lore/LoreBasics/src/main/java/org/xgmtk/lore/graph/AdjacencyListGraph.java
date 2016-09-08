@@ -214,9 +214,8 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
     @Override
     public String toString(){
         return this.getNodeStream()
-                .map(n->"{"+n+"["+this.getEdgeStream(n)
-                        .map(e->"<"+e+">")
-                        .collect(Collectors.joining(","))+"]"+"}")
+                .map(n->n+"["+this.getEdgeStream(n).map(e->e.toString())
+                        .collect(Collectors.joining(","))+"]")
                 .collect(Collectors.joining("\n"));
     }
 }

@@ -87,7 +87,7 @@ public interface Graph<N, E> {
         
         @Override
         public String toString(){
-            return "#"+this.index()+"{"+this.getData()+"}";
+            return "{#"+this.index()+", data: "+this.getData()+"}";
         }
     }
     
@@ -135,7 +135,7 @@ public interface Graph<N, E> {
         
         @Override
         public String toString(){
-            return "{"+this.getData()+"}";
+            return "{data: "+this.getData()+"}";
         }
     }
     
