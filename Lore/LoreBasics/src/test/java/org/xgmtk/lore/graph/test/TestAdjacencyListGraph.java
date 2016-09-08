@@ -15,6 +15,11 @@
  */
 package org.xgmtk.lore.graph.test;
 
+import static org.xgmtk.lore.graph.test.SampleGenericGraphs.assertGraph;
+import static org.xgmtk.lore.graph.test.SampleGenericGraphs.createGraph;
+import static org.xgmtk.lore.graph.test.SampleGenericGraphs.sample0Links;
+import static org.xgmtk.lore.graph.test.SampleGenericGraphs.sample0Nodes;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.BeforeClass;
@@ -40,10 +45,12 @@ public class TestAdjacencyListGraph {
     }
     
     @Test
-    public void testGraphBuildAndEquality(){
+    public void testGraphBuild(){
         logger.log(Level.INFO, ()->"Start "+this.testName.getMethodName()+".");
-        Graph<SampleNodeData, SampleEdgeData> graph =
-                SampleGenericGraphs.createGraph(new AdjacencyListGraph.Builder<>(), SampleGenericGraphs.sample0Nodes, SampleGenericGraphs.sample0Links);
-        SampleGenericGraphs.assertGraph(SampleGenericGraphs.sample0Nodes, SampleGenericGraphs.sample0Links, graph);
+        final AdjacencyListGraph.Builder<SampleNodeData, SampleEdgeData> builder = new AdjacencyListGraph.Builder<>();
+        createGraph(builder, sample0Nodes, sample0Links);
+        assertGraph(sample0Nodes, sample0Links, builder);
+        Graph<SampleNodeData, SampleEdgeData> graph = builder.getGraph();
+        assertGraph(sample0Nodes, sample0Links, graph);
     }
 }
