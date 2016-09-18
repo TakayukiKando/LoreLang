@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xgmtk.lore.graph;
+package org.xgmtk.lore.util;
 
 /**
- * The generic graph interface.
+ * A Runnable like interface except that the interface is enabled throwing exception.
  * 
  * @author Takayuki,Kando <develop@xgmtk.org>
- * @param <N>
- * @param <E> 
+ * @param <EX> Type of the exception, which might be thrown by the method run.
  */
-public interface GenericGraph<N,E> extends Graph<N, E>{
-    /**
-     * Get number of edges of the graph.
-     * 
-     * @return Number of nodes of the graph.
-     */
-    public int numberOfEdges();
+@FunctionalInterface
+public interface RunnableWithException<EX extends Throwable> {
+    public void run() throws EX;
 }

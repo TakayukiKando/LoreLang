@@ -46,6 +46,10 @@ configure(install.repositories.mavenInstaller) {
     }
 }
 
+[compileJava, compileTestJava].each{
+    it.options.compilerArgs += ['-Xlint:unchecked']
+}
+
 task createFolders(description: 'Creates the source folders if they do not exist.') doLast {
     sourceSets*.allSource*.srcDirs*.each { File srcDir ->
         if (!srcDir.isDirectory()) {

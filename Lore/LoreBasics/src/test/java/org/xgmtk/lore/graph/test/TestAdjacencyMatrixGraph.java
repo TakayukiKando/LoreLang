@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-import org.xgmtk.lore.graph.AdjacencyListGraph;
+import org.xgmtk.lore.graph.AdjacencyMatrixGraph;
 import org.xgmtk.lore.graph.Graph;
 import static org.xgmtk.lore.graph.test.SampleGenericGraphs.SAMPLE0_NODES;
 import static org.xgmtk.lore.graph.test.SampleGenericGraphs.SAMPLE0_LINKS;
@@ -33,8 +33,8 @@ import static org.xgmtk.lore.graph.test.SampleGenericGraphs.SAMPLE0_LINKS;
  *
  * @author kando
  */
-public class TestAdjacencyListGraph {
-    private static final Logger LOGGER  = Logger.getLogger(TestAdjacencyListGraph.class.getName());
+public class TestAdjacencyMatrixGraph {
+    private static final Logger LOGGER = Logger.getLogger(TestAdjacencyMatrixGraph.class.getName());
     
     @Rule
     public TestName testName = new TestName();
@@ -47,7 +47,7 @@ public class TestAdjacencyListGraph {
     @Test
     public void testGraphBuild(){
         LOGGER.log(Level.INFO, ()->"Start "+this.testName.getMethodName()+".");
-        final AdjacencyListGraph.Builder<SampleNodeData, SampleEdgeData> builder = new AdjacencyListGraph.Builder<>();
+        final AdjacencyMatrixGraph.Builder<SampleNodeData, SampleEdgeData> builder = new AdjacencyMatrixGraph.Builder<>();
         createGraph(builder, SAMPLE0_NODES, SAMPLE0_LINKS);
         assertGraph(SAMPLE0_NODES, SAMPLE0_LINKS, builder);
         Graph<SampleNodeData, SampleEdgeData> graph = builder.getGraph();

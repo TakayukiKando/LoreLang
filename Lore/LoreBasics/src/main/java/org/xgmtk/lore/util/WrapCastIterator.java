@@ -13,20 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.xgmtk.lore.graph;
+package org.xgmtk.lore.util;
+
+import java.util.Iterator;
 
 /**
- * The generic graph interface.
+ * Type conversion iterator adopter.
  * 
  * @author Takayuki,Kando <develop@xgmtk.org>
- * @param <N>
- * @param <E> 
+ * @param <D> Domain of type conversion.
+ * @param <R> Range of type conversion.
  */
-public interface GenericGraph<N,E> extends Graph<N, E>{
+public class WrapCastIterator<D,R> implements Iterator<R> {
+    private final Iterator<D> inner;
+    
     /**
-     * Get number of edges of the graph.
+     * Initializer.
      * 
-     * @return Number of nodes of the graph.
+     * @param wrappedIterator source.
      */
-    public int numberOfEdges();
+    public WrapCastIterator(Iterator<D> wrappedIterator){
+        this.inner = wrappedIterator;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return this.inner.hasNext();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public R next() {
+        return (R)this.inner.next();
+    }
 }

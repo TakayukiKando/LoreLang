@@ -16,6 +16,7 @@
 package org.xgmtk.lore.graph.test;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import static org.xgmtk.lore.graph.test.SampleNodeData.nameMatch;
 
@@ -44,7 +45,10 @@ public class SampleGenericGraphs{
         builder.addEdge(initialNode, edgeData,terminalNode);
     }
     
-    private static class Link{
+    /**
+     * Link of the sample graph for testing.
+     */
+    public static class Link{
         private static String toString(Link[] links) {
             return Arrays.stream(links).map(l->"["+l+"]").collect(Collectors.joining("\n"));
         }
@@ -66,8 +70,14 @@ public class SampleGenericGraphs{
         }
     }
     
-    public static final int sample0Nodes = 9;
-    public static final Link[] sample0Links= {
+    /**
+     * Number of nodes of graph sample0.
+     */
+    public static final int SAMPLE0_NODES = 9;
+    /**
+     * Array of edges of graph sample0.
+     */
+    public static final Link[] SAMPLE0_LINKS = {
         new Link("#0", 1, "#1"),
         new Link("#1", 1, "#2"),
         new Link("#2", 1, "#3"),
@@ -88,6 +98,8 @@ public class SampleGenericGraphs{
      * 0-4-3.7<br>
      * 
      * @param builder
+     * @param nodes
+     * @param links
      * @return 
      */
     public static Graph<SampleNodeData, SampleEdgeData> createGraph(GenericGraphBuilder<SampleNodeData, SampleEdgeData> builder, int nodes, Link[] links){
@@ -117,8 +129,9 @@ public class SampleGenericGraphs{
             int edges = actual.numberOfEdges(node);
 //            System.err.println("i: "+i+", node: "+node+", edges: "+edges);
             assertThat(edges, is(linksMatcedInitial.size()));
-            for(int t = 0; t < edges; ++t){
-                Graph.Edge<SampleNodeData, SampleEdgeData> edge = actual.getEdge(node, t);
+            Iterator<Graph.Edge<SampleNodeData, SampleEdgeData>> itEdge = actual.getEdgeIterator(node);
+            while(itEdge.hasNext()){
+                Graph.Edge<SampleNodeData, SampleEdgeData> edge = itEdge.next();
                 List<Link> linksMatched = linksMatcedInitial.stream()
                         .filter(l->l.terminal.equals(edge.terminalNode().getData().name))
                         .collect(Collectors.toList());

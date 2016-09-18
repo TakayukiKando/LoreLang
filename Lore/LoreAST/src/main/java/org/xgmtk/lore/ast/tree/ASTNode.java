@@ -72,6 +72,7 @@ public final class ASTNode {
      * @param attribute An enum value that specifies attribute name.
      * @return The specified attribute's value.
      */
+    @SuppressWarnings("unchecked")
     public final <T> T getAttribute(ASTAttribute<T> attribute){
         Object v = this.attrs.get(attribute);
         return (T)v;

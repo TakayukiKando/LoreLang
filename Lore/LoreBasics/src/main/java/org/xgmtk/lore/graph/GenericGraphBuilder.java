@@ -15,9 +15,10 @@
  */
 package org.xgmtk.lore.graph;
 
-import java.util.stream.IntStream;
-
 /**
+ * The generic graph builder interface.
+ * Because a graph builder itself is also a graph,
+ * the graph builder can be used as a mutable graph.
  * 
  * @author Takayuki,Kando <develop@xgmtk.org>
  * @param <N> Data type of a node contents.
@@ -50,8 +51,7 @@ public interface GenericGraphBuilder<N, E> extends Graph<N,E>, GenericGraph<N, E
                 .forEach(n->this.addNode(n.getData()));
 
         source.getNodeStream().forEach(n->{
-            IntStream.range(0, source.numberOfEdges(n))
-                .mapToObj(i->source.getEdge(n, i))
+            source.getEdgeStream(n)
                 .forEach(e->this.addEdge(n, e.getData(), e.terminalNode()));
         });
     }

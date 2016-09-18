@@ -15,12 +15,12 @@
  */
 package org.xgmtk.lore.graph;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -44,7 +44,8 @@ public interface Graph<N, E> {
         /**
          * Initializer.
          * 
-         * @param index 
+         * @param index
+         * @param data 
          */
         public Node(int index, N data){
             this.index = index;
@@ -180,12 +181,19 @@ public interface Graph<N, E> {
     public int size();
     
     /**
-     * Get a node.
+     * Get a specified node.
      * 
-     * @param index An index number of the node.
+     * @param index The index of the node.
      * @return A specified node.
      */
     public Node<N> getNode(int index);
+    
+    /**
+     * Get an iterator of nodes of the graph.
+     * 
+     * @return An iterator of nodes of the graph.
+     */
+    public Iterator<Node<N>> getNodeIterator();
     
     /**
      * Get a stream of nodes of the graph.
@@ -214,29 +222,27 @@ public interface Graph<N, E> {
     }
     
     /**
-     * Get number of edges started from specified node.
+     * Get number of edges which are started from specified node.
      * 
      * @param node The initial node.
      * @return Number of edges started from specified node.
      */
     public abstract int numberOfEdges(Node<N> node);
+
     
     /**
-     * Get an edge started from specified node.
+     * Get an iterator of edges which are started from specified node.
      * 
      * @param node The initial node.
-     * @param index The index of the edge.
-     * @return An edge started from specified node
+     * @return A iterator of edges started from specified node.
      */
-    public abstract Edge<N,E> getEdge(Node<N> node, int index);
+    public Iterator<Edge<N, E>> getEdgeIterator(Node<N> node);
     
     /**
-     * Get a stream of edges started from specified node.
+     * Get a stream of edges which are started from specified node.
      * 
      * @param node The initial node.
      * @return A stream of edges started from specified node.
      */
-    public default Stream<Edge<N, E>> getEdgeStream(Node<N> node) {
-        return IntStream.range(0, this.numberOfEdges(node)).mapToObj(i->this.getEdge(node, i));
-    }
+    public Stream<Edge<N, E>> getEdgeStream(Node<N> node);
 }
