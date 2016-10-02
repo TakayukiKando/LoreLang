@@ -23,15 +23,18 @@ import java.util.Iterator;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static org.hamcrest.CoreMatchers.is;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 import org.xgmtk.lore.util.ImmutableVector;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.xgmtk.lore.util.assertion.AssertException.assertException;
+import static org.xgmtk.lore.util.assertion.AssertMatrix.assertCopying;
 
 /**
  *
@@ -58,24 +61,27 @@ public class TestArrayMatrix {
         assertThat(it, notNullValue());
         assertThat(it.hasNext(), is(false));
         assertException(()->it.next(), IndexOutOfBoundsException.class);
+        
+        //@SuppressWarnings("RedundantStringConstructorCall")
+        assertCopying(m, String::new);
     }
     
     @Test
     public void testMatrix_3_2(){
         String[][] expected = {{"a", "b", "c"},
                                 {"d", "e", "f"}};
-        ImmutableMatrix<String> v = new ArrayMatrix<>(Arrays.asList(Arrays.asList(expected[0]), Arrays.asList(expected[1])));
+        ImmutableMatrix<String> m = new ArrayMatrix<>(Arrays.asList(Arrays.asList(expected[0]), Arrays.asList(expected[1])));
 
-        assertThat(v.numberOfRows(), is(2));
-        assertThat(v.numberOfColumns(), is(3));
+        assertThat(m.numberOfRows(), is(2));
+        assertThat(m.numberOfColumns(), is(3));
 
-        for(int row = 0; row < v.numberOfRows(); ++row){
-            for(int col = 0; col < v.numberOfColumns(); ++col){
-                assertThat(v.get(row, col), is(expected[row][col]));
+        for(int row = 0; row < m.numberOfRows(); ++row){
+            for(int col = 0; col < m.numberOfColumns(); ++col){
+                assertThat(m.get(row, col), is(expected[row][col]));
             }
         }
         
-        Iterator<ImmutableVector<String>> itRow = v.iterator();
+        Iterator<ImmutableVector<String>> itRow = m.iterator();
         assertThat(itRow, notNullValue());
         int row1 = 0;
         while(itRow.hasNext()){
@@ -93,7 +99,7 @@ public class TestArrayMatrix {
         assertException(()->itRow.next(), IndexOutOfBoundsException.class);
         
         int row2 = 0;
-        for(ImmutableVector<String> rowVec : v){
+        for(ImmutableVector<String> rowVec : m){
             int col = 0;
             for(String e : rowVec){
                 assertThat(e, is(expected[row2][col]));
@@ -102,12 +108,15 @@ public class TestArrayMatrix {
             ++row2;
         }
         
-        for(int row = 0; row < v.numberOfRows(); ++row){
+        for(int row = 0; row < m.numberOfRows(); ++row){
             int col = 0;
-            for(String e : v.get(row)){
+            for(String e : m.get(row)){
                 assertThat(e, is(expected[row][col]));
                 ++col;
             }
         }
+        
+        //@SuppressWarnings("RedundantStringConstructorCall")
+        assertCopying(m, String::new);
     }
 }

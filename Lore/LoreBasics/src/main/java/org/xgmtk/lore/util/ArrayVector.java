@@ -15,8 +15,13 @@
  */
 package org.xgmtk.lore.util;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Stream;
+import org.xgmtk.lore.graph.Graph;
 
 /**
  * Implementation of immutable 1D array.
@@ -25,6 +30,16 @@ import java.util.List;
  * @param <T> Type of elements.
  */
 public final class ArrayVector<T> implements ImmutableVector<T> {
+    /**
+     * Get zero-length vector.
+     * 
+     * @param <T> Type of elements.
+     * @return Zero-length vector.
+     */
+    public static <T> ArrayVector<T> zeroLengthVector() {
+        return new ArrayVector<>(Collections.emptyList());
+    }
+    
     private class InnerIterator<T> implements Iterator<T>{
         /**
          * Current index;
@@ -62,11 +77,37 @@ public final class ArrayVector<T> implements ImmutableVector<T> {
      * 
      * @param elements 
      */
-    public ArrayVector(List<T> elements) {
+    public ArrayVector(Stream<T> elements) {
         super();
         this.elements = elements.toArray();
     }
 
+    /**
+     * Initializer.
+     * 
+     * @param elements 
+     */
+    public ArrayVector(List<T> elements) {
+        super();
+        this.elements = elements.toArray();
+    }
+      
+    /**
+     * Copy initializer.
+     * 
+     * @param src A source matrix to copying.
+     * @param elementCopier element copier
+     */
+    public ArrayVector(ImmutableVector<T> src, Function<T, T> elementCopier) {
+        super();
+        this.elements = new Object[src.size()];
+        int i = 0;
+        for(T v : src){
+            this.elements[i] = elementCopier.apply(v);
+            ++i;
+        }
+    }
+    
     @Override
     public int size() {
         return this.elements.length;
@@ -81,5 +122,21 @@ public final class ArrayVector<T> implements ImmutableVector<T> {
     @Override
     public Iterator<T> iterator() {
         return new InnerIterator<>();
+    }
+    
+    @Override
+    public boolean equals(Object o){
+        if(!(o instanceof ArrayVector<?>)){
+            return false;
+        }
+        ArrayVector<?> v = (ArrayVector<?>)o;
+        return Arrays.deepEquals(this.elements, v.elements);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 79 * hash + Arrays.deepHashCode(this.elements);
+        return hash;
     }
 }

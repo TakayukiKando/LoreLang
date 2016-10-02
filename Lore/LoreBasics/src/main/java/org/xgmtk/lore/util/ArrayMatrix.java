@@ -15,8 +15,10 @@
  */
 package org.xgmtk.lore.util;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Implementation of immutable 2D array.
@@ -150,6 +152,26 @@ public final class ArrayMatrix<T> implements ImmutableMatrix<T> {
             }
         }
     }
+    
+    /**
+     * Copy initializer.
+     * 
+     * @param src A source matrix to copying.
+     * @param elementCopier element copier
+     */
+    public ArrayMatrix(ImmutableMatrix<T> src, Function<T, T> elementCopier) {
+        super();
+        this.rows = src.numberOfRows();
+        this.cols = src.numberOfColumns();
+        this.elements = new Object[rows*cols];
+        int i = 0;
+        for(ImmutableVector<T> row : src){
+            for(T v : row){
+                this.elements[i] = elementCopier.apply(v);
+                ++i;
+            }
+        }
+    }
 
     @Override
     public int numberOfRows() {
@@ -181,5 +203,26 @@ public final class ArrayMatrix<T> implements ImmutableMatrix<T> {
     @Override
     public Iterator<ImmutableVector<T>> iterator() {
         return new RowVectorIterator<>();
+    }
+    
+    @Override
+    public boolean equals(Object o){
+        if(!(o instanceof ArrayMatrix<?>)){
+            return false;
+        }
+        ArrayMatrix<?> v = (ArrayMatrix<?>)o;
+        if(this.numberOfRows() != v.numberOfRows() || this.numberOfColumns() != v.numberOfColumns()){
+            return false;
+        }
+        return Arrays.deepEquals(this.elements, v.elements);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + this.rows;
+        hash = 47 * hash + this.cols;
+        hash = 47 * hash + Arrays.deepHashCode(this.elements);
+        return hash;
     }
 }

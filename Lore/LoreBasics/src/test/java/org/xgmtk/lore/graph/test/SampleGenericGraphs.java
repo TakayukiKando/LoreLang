@@ -18,6 +18,8 @@ package org.xgmtk.lore.graph.test;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import static org.xgmtk.lore.graph.test.SampleNodeData.nameMatch;
 
 
@@ -26,8 +28,14 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.xgmtk.lore.graph.GenericGraphBuilder;
 import org.xgmtk.lore.graph.Graph;
+import org.xgmtk.lore.graph.iterator.GraphIterator;
+import org.xgmtk.lore.graph.iterator.GraphPath;
+import org.xgmtk.lore.util.ImmutableVector;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
+import org.xgmtk.lore.graph.AdjacencyListGraph;
+import org.xgmtk.lore.graph.AdjacencyMatrixGraph;
 
 /**
  *
@@ -110,6 +118,18 @@ public class SampleGenericGraphs{
         return builder.getGraph();
     }
     
+    public static GenericGraphBuilder<SampleNodeData, SampleEdgeData> createAdjacencyListGraphBuilder(){
+        AdjacencyListGraph.Builder<SampleNodeData, SampleEdgeData> builder = new AdjacencyListGraph.Builder<>();
+        createGraph(builder, SAMPLE0_NODES, SAMPLE0_LINKS);
+        return builder;
+    }
+    
+    public static GenericGraphBuilder<SampleNodeData, SampleEdgeData> createAdjacencyMatrixGraphBuilder(){
+        AdjacencyMatrixGraph.Builder<SampleNodeData, SampleEdgeData> builder = new AdjacencyMatrixGraph.Builder<>();
+        createGraph(builder, SAMPLE0_NODES, SAMPLE0_LINKS);
+        return builder;
+    }
+    
     public static void assertGraph(int expectedNodes, Link[] expectedLinks, Graph<SampleNodeData, SampleEdgeData> actual){
 //        System.err.println("Expected: number of nodes:"+expectedNodes+", links:\n"+Link.toString(expectedLinks));
 //        System.err.println();
@@ -142,4 +162,6 @@ public class SampleGenericGraphs{
             }
         }
     }
+
+ 
 }

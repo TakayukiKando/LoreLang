@@ -44,10 +44,11 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
      * @param <N> Data type of a node contents.
      * @param <E> Data type of an edge contents.
      */
-    protected static class ConcreteNode<N,E> extends Node<N>{
-        private final ImmutableVector<OptimizedEdge<N, E>> edges;
+    public static class ConcreteNode<N,E> extends Node<N>{
+        private ImmutableVector<OptimizedEdge<N, E>> edges;
         
         /**
+         * Initializer.
          * 
          * @param index
          * @param nodeData
@@ -55,6 +56,24 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
          */
         public ConcreteNode(int index,N nodeData, List<OptimizedEdge<N, E>> edges){
             super(index, nodeData);
+            this.setEdges(edges);
+        }
+        
+        /**
+         * 
+         * @param index
+         * @param nodeData
+         */
+        public ConcreteNode(int index,N nodeData){
+            super(index, nodeData);
+            this.edges = null;
+        }
+        
+        /**
+         * 
+         * @param edges 
+         */
+        public final void setEdges(List<OptimizedEdge<N, E>> edges){
             this.edges = new ArrayVector<>(edges);
         }
         
@@ -79,16 +98,16 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
          * 
          * @return 
          */
-        public final Stream<Edge<N, E>> getEdgeStream(){
-            return this.edges.stream().map(e->(Edge<N,E>)e);
+        public final Stream<OptimizedEdge<N, E>> getEdgeStream(){
+            return this.edges.stream();
         }
         
         /**
          * 
          * @return 
          */
-        public final Iterator<Edge<N, E>> getEdgeIterator(){
-            return new WrapCastIterator<>(this.edges.iterator());
+        public final Iterator<OptimizedEdge<N, E>> getEdgeIterator(){
+            return this.edges.iterator();
         }
     }
     
@@ -97,7 +116,7 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
      * @param <N> Data type of a node contents.
      * @param <E> Data type of an edge contents.
      */
-    protected static class OptimizedEdge<N, E> extends Edge<N,E>{
+    public static class OptimizedEdge<N, E> extends Edge<N,E>{
         private final Node<N> terminal;
         
         /**
@@ -122,6 +141,28 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
         }
     }
     
+    private static class WrapEdgesIterator<N, E> implements Iterator<Edge<N, E>>{
+        private final Node<N> initial;
+        private final Iterator<OptimizedEdge<N, E>> inner;
+
+        public WrapEdgesIterator(Node<N> initial, Iterator<OptimizedEdge<N, E>> inner){
+            super();
+            this.initial = initial;
+            this.inner = inner;
+        }
+
+        @Override
+        public final boolean hasNext() {
+            return this.inner.hasNext();
+        }
+
+        @Override
+        public final Edge<N, E> next() {
+            OptimizedEdge<N, E> optE = this.inner.next();
+            return new ConcreteEdge<>(this.initial, optE.getData(), optE.terminal);
+        }
+    }
+    
     /**
      * The generic graph builder for the generic graph.
      * It is implemented with adjacency list.
@@ -134,28 +175,6 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
      * @param <E> Data type of an edge contents.
      */
     public static class Builder<N, E> implements GenericGraphBuilder<N, E>{
-        private static class WrapEdgesIterator<N, E> implements Iterator<Edge<N, E>>{
-            private final Node<N> initial;
-            private final Iterator<OptimizedEdge<N, E>> inner;
-
-            public WrapEdgesIterator(Node<N> initial, Iterator<OptimizedEdge<N, E>> inner){
-                super();
-                this.initial = initial;
-                this.inner = inner;
-            }
-
-            @Override
-            public final boolean hasNext() {
-                return this.inner.hasNext();
-            }
-
-            @Override
-            public final Edge<N, E> next() {
-                OptimizedEdge<N, E> optE = this.inner.next();
-                return new ConcreteEdge<>(this.initial, optE.getData(), optE.terminal);
-            }
-        }
-        
         private final AtomicInteger nodeCount;
         protected final Map<Node<N>, List<OptimizedEdge<N,E>>> nodes;
         
@@ -227,9 +246,19 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
         @Override
         public AdjacencyListGraph<N, E> getGraph(){
             int numberOfEdges = this.numberOfEdges();
-            List<ConcreteNode<N, E>> concreteNodes = this.nodes.entrySet().stream()
-                    .map(e->new ConcreteNode<>(e.getKey().index(), e.getKey().getData(), e.getValue()))
-                    .collect(Collectors.toList());
+            Stream<ConcreteNode<N, E>> concreteNodesStream = this.nodes.keySet().stream()
+                    .map(n->new ConcreteNode<>(n.index(), n.getData()));
+            List<ConcreteNode<N, E>> concreteNodes = concreteNodesStream.collect(Collectors.toList());
+
+            //this.nodes is a LinkedHashMap<>.
+            //It keeps the order of entries.
+            Iterator<ConcreteNode<N, E>> newNodesIt = concreteNodes.iterator();
+            for(Map.Entry<Node<N>, List<OptimizedEdge<N, E>>> ent : this.nodes.entrySet()){
+                newNodesIt.next().setEdges(
+                    ent.getValue().stream()
+                        .map(edge->new OptimizedEdge<>(edge.getData(), concreteNodes.get(edge.terminal.index())))
+                        .collect(Collectors.toList()));
+            }
             return new AdjacencyListGraph<>(numberOfEdges, concreteNodes);
         }
     }
@@ -277,12 +306,14 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
     @Override
     @SuppressWarnings("unchecked")
     public final Iterator<Edge<N, E>> getEdgeIterator(Node<N> node) {
-        return ((ConcreteNode<N, E>)node).getEdgeIterator();
-    }    @Override
+        final ConcreteNode<N, E> concreteNode = (ConcreteNode<N, E>)node;
+        return new WrapEdgesIterator<>(concreteNode, concreteNode.getEdgeIterator());
+    }
     
+    @Override
     @SuppressWarnings("unchecked")
     public final Stream<Edge<N, E>> getEdgeStream(Node<N> node) {
-        return ((ConcreteNode<N, E>)node).getEdgeStream();
+        return ((ConcreteNode<N, E>)node).getEdgeStream().map(opt->new ConcreteEdge<>(node, opt.getData(), opt.terminal));
     }
     
     @Override

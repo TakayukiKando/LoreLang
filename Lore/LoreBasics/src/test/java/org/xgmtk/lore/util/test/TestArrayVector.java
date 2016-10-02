@@ -21,6 +21,7 @@ import java.util.Iterator;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,9 +29,12 @@ import org.junit.rules.TestName;
 import org.xgmtk.lore.util.ArrayVector;
 import org.xgmtk.lore.util.ImmutableVector;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.xgmtk.lore.util.assertion.AssertException.assertException;
+import static org.xgmtk.lore.util.assertion.AssertVector.assertCopying;
 
 /**
  *
@@ -48,6 +52,20 @@ public class TestArrayVector {
     }
     
     @Test
+    public void testVector_zero(){
+        ImmutableVector<String> v = ArrayVector.zeroLengthVector();
+        assertThat(v.size(), is(0));
+        assertException(()->v.get(0), IndexOutOfBoundsException.class);
+        Iterator<String> it = v.iterator();
+        assertThat(it, notNullValue());
+        assertThat(it.hasNext(), is(false));
+        assertException(()->it.next(), IndexOutOfBoundsException.class);
+        
+        //@SuppressWarnings("RedundantStringConstructorCall")
+        assertCopying(v, String::new);
+    }
+    
+    @Test
     public void testVector_0(){
         ImmutableVector<String> v = new ArrayVector<>(new ArrayList<>());
         assertThat(v.size(), is(0));
@@ -56,6 +74,9 @@ public class TestArrayVector {
         assertThat(it, notNullValue());
         assertThat(it.hasNext(), is(false));
         assertException(()->it.next(), IndexOutOfBoundsException.class);
+        
+        //@SuppressWarnings("RedundantStringConstructorCall")
+        assertCopying(v, String::new);
     }
     
     @Test
@@ -83,5 +104,10 @@ public class TestArrayVector {
             assertThat(e, is(expected[index2]));
             ++index2;
         }
+        
+        //@SuppressWarnings("RedundantStringConstructorCall")
+        assertCopying(v, String::new);
     }
+
+
 }

@@ -148,7 +148,7 @@ public final class AdjacencyMatrixGraph<N, E> implements GenericGraph<N, E> {
 
         @Override
         public Iterator<Node<N>> getNodeIterator() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            return this.nodes.iterator();
         }
         
         @Override
