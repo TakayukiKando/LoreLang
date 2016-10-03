@@ -18,8 +18,6 @@ package org.xgmtk.lore.graph.test;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
 import static org.xgmtk.lore.graph.test.SampleNodeData.nameMatch;
 
 
@@ -28,11 +26,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.xgmtk.lore.graph.GenericGraphBuilder;
 import org.xgmtk.lore.graph.Graph;
-import org.xgmtk.lore.graph.iterator.GraphIterator;
-import org.xgmtk.lore.graph.iterator.GraphPath;
-import org.xgmtk.lore.util.ImmutableVector;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 import org.xgmtk.lore.graph.AdjacencyListGraph;
 import org.xgmtk.lore.graph.AdjacencyMatrixGraph;
@@ -87,13 +81,21 @@ public class SampleGenericGraphs{
      */
     public static final Link[] SAMPLE0_LINKS = {
         new Link("#0", 1, "#1"),
-        new Link("#1", 1, "#2"),
-        new Link("#2", 1, "#3"),
-        new Link("#3", 1, "#4"),
-        new Link("#4", 1, "#5"),
-        new Link("#2", 1, "#6"),
         new Link("#0", 1, "#4"),
-        new Link("#7", 1, "#8")
+        new Link("#1", 1, "#0"),
+        new Link("#1", 1, "#2"),
+        new Link("#2", 1, "#1"),
+        new Link("#2", 1, "#3"),
+        new Link("#2", 1, "#6"),
+        new Link("#3", 1, "#2"),
+        new Link("#3", 1, "#4"),
+        new Link("#4", 1, "#0"),
+        new Link("#4", 1, "#3"),
+        new Link("#4", 1, "#5"),
+        new Link("#5", 1, "#4"),
+        new Link("#6", 1, "#2"),
+        new Link("#7", 1, "#8"),
+        new Link("#8", 1, "#7")
     };
 
     /**
