@@ -23,61 +23,24 @@ import org.xgmtk.lore.util.ImmutableVector;
  * @param <N> Data type of a graph node contents.
  * @param <E> Data type of a graph edge contents.
  */
-public final class DepthFirstIterator<N, E> implements GraphIterator<N, E> {
-    private static class State<N, E>{
-        public final Graph.Node<N> node;
-        public final Iterator<Graph.Edge<N,E>> edges;
-        
-        public State(Graph.Node<N> currentNode, Iterator<Graph.Edge<N,E>> edges){
-            this.node = currentNode;
-            this.edges = edges;
-        }
-    }
-    
-    private static class Record<N, E>{
-        public boolean visited = false;
-        public Graph.Edge<N,E> stepBefore = null;
-    }
-    
-    private final Graph<N, E> graph;
-    private final Graph.Node<N> start;
-    private final int depth;
-    private final Deque<State<N, E>> states;
-    private final ImmutableVector<Record<N, E>> visitedRocords;
-
+public final class DepthFirstIterator<N, E> extends AbstractGraphIterator<N, E> {
     /**
      * 
      * @param graph
      * @param start
-     * @param depth 
+     * @param maxDepth 
      */
-    public DepthFirstIterator(Graph<N, E> graph, Graph.Node<N> start, int depth){
-        super();
-        this.graph = graph;
-        this.depth = 0;
-        this.start = start;
-        this.states = new ArrayDeque<>();
-        this.visitedRocords = new ArrayVector<>(IntStream.range(0, graph.size()).mapToObj(i-> new Record<>()));
-        this.states.push(new State<>(start, graph.getEdgeIterator(start)));
+    public DepthFirstIterator(Graph<N, E> graph, Graph.Node<N> start, int maxDepth){
+        super(graph, start, maxDepth);
     }
-    
+
     /**
      * 
      * @param graph
      * @param start 
      */
     public DepthFirstIterator(Graph<N, E> graph, Graph.Node<N> start){
-        this(graph, start, Integer.MAX_VALUE);
-    }
-    
-    @Override
-    public Graph.Node<N> startNode() {
-        return this.start;
-    }
-    
-    @Override
-    public boolean hasNext() {
-        return !this.states.isEmpty();
+        super(graph, start);
     }
 
     @Override
@@ -111,33 +74,5 @@ public final class DepthFirstIterator<N, E> implements GraphIterator<N, E> {
             this.states.push(new State<>(next, graph.getEdgeIterator(next)));
             return node;
         }
-    }
-
-    @Override
-    public boolean isVisited(final Graph.Node<N> node){
-        return visitedRocords.get(node.index()).visited;
-    }
-    
-    @Override
-    public GraphPath<N, E> getPath(final Graph.Node<N> goal) {
-        Objects.requireNonNull(goal);
-        Record<N, E> record = visitedRocords.get(goal.index());
-        if(!record.visited){//Not reacheable.
-            System.err.print("(Not reacheable.)");
-            return new GraphPath<>(this.startNode(), goal);
-        }
-        if(record.stepBefore == null){//The goal node is same as the start node.
-            System.err.print("(The goal node is same as the start node.)");
-            return new GraphPath<>(this.startNode());
-        }
-        //Ordinary path.
-        System.err.print("(Ordinary path.)");
-        List<Graph.Edge<N, E>> steps = new LinkedList<>();
-        while(record.stepBefore != null){
-            System.err.println("("+record.stepBefore.terminalNode().index()+"<-"+record.stepBefore.initialNode().index()+")");
-            steps.add(0, record.stepBefore);
-            record = visitedRocords.get(record.stepBefore.initialNode().index());
-        }
-        return new GraphPath<>(new ArrayVector<>(steps));
     }
 }
