@@ -52,11 +52,9 @@ public final class DepthFirstIterator<N, E> extends AbstractGraphIterator<N, E> 
         State<N, E> current = this.states.peek();
         final Graph.Node<N> currentNode = current.node;
         final Record<N, E> currentRecord = this.visitedRocords.get(currentNode.index());
-        Graph.Node<N> node = null;
-        if(!currentRecord.visited){
-            currentRecord.visited = true;
-            node = currentNode;
-        }
+        currentRecord.visited = true;
+        final Graph.Node<N> node = currentNode;
+
         for(;;){
             while(!current.edges.hasNext()){
                 this.states.pop();
