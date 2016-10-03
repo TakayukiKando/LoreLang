@@ -49,9 +49,11 @@ public class AssertGraphIterater {
             int[] expectedPathIndices = expectedPaths[ipath];
             assertThat(actualPath.goalNode(), is(goal));
             assertThat(actualPath.startNode(), is(start));
+            assertThat(iterator.isVisited(goal), is(expectedPathIndices != null));
             if(expectedPathIndices == null){//Not visited case.
                 System.err.println("Not reacheable.");
                 assertThat(actualPath.steps().isPresent(), is(false));
+
                 continue;
             }
             if(expectedPathIndices.length == 1){//Start == Goal case.
