@@ -60,7 +60,7 @@ public final class DepthFirstIterator<N, E> extends AbstractGraphIterator<N, E> 
                 continue;
             }
             this.visitedRocords.get(next.index()).stepBefore = nextEdge;
-            System.err.println("<Node next class: \""+next.getClass().getName()+"\">");
+            //System.err.println("<Node next class: \""+next.getClass().getName()+"\">");
             this.states.push(new State<>(next, graph.getEdgeIterator(next)));
             return node;
         }

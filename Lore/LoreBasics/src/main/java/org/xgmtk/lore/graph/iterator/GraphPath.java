@@ -71,7 +71,7 @@ public final class GraphPath<N, E> {
         this.steps = steps;
         this.start = this.steps.get(0).initialNode();
         int last = this.steps.size() - 1;
-        System.err.println("(last: "+last+")");
+        //System.err.println("(last: "+last+")");
         this.goal = this.steps.get(last).terminalNode();
     }
 

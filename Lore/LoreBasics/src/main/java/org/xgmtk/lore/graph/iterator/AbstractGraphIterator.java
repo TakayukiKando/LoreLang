@@ -90,18 +90,18 @@ public abstract class AbstractGraphIterator<N, E> implements GraphIterator<N, E>
         Objects.requireNonNull(goal);
         Record<N, E> record = visitedRocords.get(goal.index());
         if(!record.visited){//Not reacheable.
-            System.err.print("(Not reacheable.)");
+            //System.err.print("(Not reacheable.)");
             return new GraphPath<>(this.startNode(), goal);
         }
         if(record.stepBefore == null){//The goal node is same as the start node.
-            System.err.print("(The goal node is same as the start node.)");
+            //System.err.print("(The goal node is same as the start node.)");
             return new GraphPath<>(this.startNode());
         }
         //Ordinary path.
-        System.err.print("(Ordinary path.)");
+        //System.err.print("(Ordinary path.)");
         List<Graph.Edge<N, E>> steps = new LinkedList<>();
         while(record.stepBefore != null){
-            System.err.println("("+record.stepBefore.terminalNode().index()+"<-"+record.stepBefore.initialNode().index()+")");
+            //System.err.println("("+record.stepBefore.terminalNode().index()+"<-"+record.stepBefore.initialNode().index()+")");
             steps.add(0, record.stepBefore);
             record = visitedRocords.get(record.stepBefore.initialNode().index());
         }

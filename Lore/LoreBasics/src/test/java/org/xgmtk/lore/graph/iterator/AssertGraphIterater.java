@@ -33,7 +33,7 @@ public class AssertGraphIterater {
         while(iterator.hasNext()){
             int expectedIndex = expectedOrderOfIteration[i++];
             Graph.Node<N> actual = iterator.next();
-            //System.err.println("Visit node["+actual.index()+"]");
+            //System.err.println("* Iterator returns node["+actual.index()+"]");
             assertThat(actual.index(), is(expectedIndex));
         }
         assertThat(i, is(expectedOrderOfIteration.length));
@@ -42,7 +42,7 @@ public class AssertGraphIterater {
     public static <N, E> void assertPaths(int[][] expectedPaths, Graph<N, E> graph, GraphIterator<N, E> iterator) {
         Graph.Node<N> start = iterator.startNode();
         for(int ipath = 0; ipath < expectedPaths.length; ++ipath){
-            System.err.print("assert path["+ipath+"]: ");
+            //System.err.print("assert path["+ipath+"]: ");
             final Graph.Node<N> goal = graph.getNode(ipath);
             GraphPath<N, E> actualPath = iterator.getPath(goal);
             int[] expectedPathIndices = expectedPaths[ipath];
@@ -50,19 +50,19 @@ public class AssertGraphIterater {
             assertThat(actualPath.startNode(), is(start));
             assertThat(iterator.isVisited(goal), is(expectedPathIndices != null));
             if(expectedPathIndices == null){//Not visited case.
-                System.err.println("Not reacheable.");
+                //System.err.println("Not reacheable.");
                 assertThat(actualPath.steps().isPresent(), is(false));
 
                 continue;
             }
             if(expectedPathIndices.length == 1){//Start == Goal case.
-                System.err.println("The goal node is same as the start node.");
+                //System.err.println("The goal node is same as the start node.");
                 assertThat(actualPath.steps().isPresent(), is(true));
                 assertThat(actualPath.steps().get().size(), is(0));
                 assertThat(actualPath.startNode(), is(actualPath.goalNode()));
                 continue;
             }
-            System.err.println("Ordinaly path.");
+            //System.err.println("Ordinaly path.");
             assertThat(expectedPathIndices[expectedPathIndices.length-1], is(goal.index()));
             assertThat(expectedPathIndices[0], is(start.index()));
             final ImmutableVector<Graph.Edge<N, E>> steps = actualPath.steps().get();
