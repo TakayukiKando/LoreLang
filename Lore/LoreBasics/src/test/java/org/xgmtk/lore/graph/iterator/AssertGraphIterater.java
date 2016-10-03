@@ -20,7 +20,6 @@ import org.xgmtk.lore.graph.GenericGraphBuilder;
 import org.xgmtk.lore.graph.Graph;
 import org.xgmtk.lore.util.ImmutableVector;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
 /**

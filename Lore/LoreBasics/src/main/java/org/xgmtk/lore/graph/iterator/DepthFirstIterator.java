@@ -5,16 +5,7 @@
  */
 package org.xgmtk.lore.graph.iterator;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.IntStream;
 import org.xgmtk.lore.graph.Graph;
-import org.xgmtk.lore.util.ArrayVector;
-import org.xgmtk.lore.util.ImmutableVector;
 
 /**
  * An iterator for the depth first serch on a Graph&lt;N, E&gt;.
