@@ -6,7 +6,6 @@
 package org.xgmtk.lore.graph.iterator;
 
 import java.util.ArrayDeque;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -18,15 +17,13 @@ import org.xgmtk.lore.util.ArrayVector;
 import org.xgmtk.lore.util.ImmutableVector;
 
 /**
+ * An iterator for the depth first serch on a Graph&lt;N, E&gt;.
  * 
  * @author Takayuki,Kando <develop@xgmtk.org>
  * @param <N> Data type of a graph node contents.
  * @param <E> Data type of a graph edge contents.
  */
 public final class DepthFirstIterator<N, E> implements GraphIterator<N, E> {
-
-    private final Graph<N, E> graph;
-
     private static class State<N, E>{
         public final Graph.Node<N> node;
         public final Iterator<Graph.Edge<N,E>> edges;
@@ -36,12 +33,13 @@ public final class DepthFirstIterator<N, E> implements GraphIterator<N, E> {
             this.edges = edges;
         }
     }
-
+    
     private static class Record<N, E>{
         public boolean visited = false;
         public Graph.Edge<N,E> stepBefore = null;
     }
     
+    private final Graph<N, E> graph;
     private final Graph.Node<N> start;
     private final int depth;
     private final Deque<State<N, E>> states;
