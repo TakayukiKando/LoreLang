@@ -32,6 +32,7 @@ public final class DepthFirstIterator<N, E> extends AbstractGraphIterator<N, E> 
      */
     public DepthFirstIterator(Graph<N, E> graph, Graph.Node<N> start, int maxDepth){
         super(graph, start, maxDepth);
+        this.states.push(new State<>(start, graph.getEdgeIterator(start)));
     }
 
     /**
@@ -40,7 +41,7 @@ public final class DepthFirstIterator<N, E> extends AbstractGraphIterator<N, E> 
      * @param start 
      */
     public DepthFirstIterator(Graph<N, E> graph, Graph.Node<N> start){
-        super(graph, start);
+        this(graph, start, Integer.MAX_VALUE);
     }
 
     @Override

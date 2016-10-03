@@ -67,16 +67,6 @@ public abstract class AbstractGraphIterator<N, E> implements GraphIterator<N, E>
         this.start = start;
         this.states = new ArrayDeque<>();
         this.visitedRocords = new ArrayVector<>(IntStream.range(0, graph.size()).mapToObj(i-> new Record<>()));
-        this.states.push(new State<>(start, graph.getEdgeIterator(start)));
-    }
-
-    /**
-     * 
-     * @param graph
-     * @param start 
-     */
-    protected AbstractGraphIterator(Graph<N, E> graph, Graph.Node<N> start){
-        this(graph, start, Integer.MAX_VALUE);
     }
     
     @Override
