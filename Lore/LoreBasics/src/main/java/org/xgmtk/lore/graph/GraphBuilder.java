@@ -16,7 +16,7 @@
 package org.xgmtk.lore.graph;
 
 /**
- * The generic graph builder interface.
+ * The graph builder interface.
  * Because a graph builder itself is also a graph,
  * the graph builder can be used as a mutable graph.
  * 
@@ -24,35 +24,13 @@ package org.xgmtk.lore.graph;
  * @param <N> Data type of a node contents.
  * @param <E> Data type of an edge contents.
  */
-public interface GenericGraphBuilder<N, E> extends GraphBuilder<N,E>, GenericGraph<N, E> {    
-    /**
-     * Add a node to the graph via supplier.
-     * 
-     * @param nodeData 
-     */
-    public void addNode(N nodeData);
+public interface GraphBuilder<N, E> extends Graph<N, E> {
     
     /**
-     * Add an edge to the graph.
+     * Return a built graph.
      * 
-     * @param initialNode
-     * @param edgeData 
-     * @param terminalNode
+     * @return A built graph.
+     * @throws NullPointerException A graph has not built yet.
      */
-    public void addEdge(Node<N> initialNode, E edgeData, Node<N> terminalNode);
-    
-    /**
-     * The specified graph's nodes and edges are added to the currently building graph.
-     * 
-     * @param source A source graph.
-     */
-    public default void loadGraph(Graph<N,E> source){
-        source.getNodeStream()
-                .forEach(n->this.addNode(n.getData()));
-
-        source.getNodeStream().forEach(n->{
-            source.getEdgeStream(n)
-                .forEach(e->this.addEdge(n, e.getData(), e.terminalNode()));
-        });
-    }
+    public Graph<N, E> getGraph() throws NullPointerException;
 }
