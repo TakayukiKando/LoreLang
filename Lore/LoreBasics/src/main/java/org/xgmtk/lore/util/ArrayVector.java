@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import org.xgmtk.lore.graph.Graph;
 
 /**
  * Implementation of immutable 1D array.
