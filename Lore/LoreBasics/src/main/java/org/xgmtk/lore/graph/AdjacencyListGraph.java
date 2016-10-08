@@ -44,7 +44,7 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
      * @param <N> Data type of a node contents.
      * @param <E> Data type of an edge contents.
      */
-    public static class ConcreteNode<N,E> extends Node<N>{
+    public static class NodeWithEdges<N,E> extends ConcreteNode<N>{
         private ImmutableVector<OptimizedEdge<N, E>> edges;
         
         /**
@@ -54,7 +54,7 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
          * @param nodeData
          * @param edges 
          */
-        public ConcreteNode(int index,N nodeData, List<OptimizedEdge<N, E>> edges){
+        public NodeWithEdges(int index,N nodeData, List<OptimizedEdge<N, E>> edges){
             super(index, nodeData);
             this.setEdges(edges);
         }
@@ -64,7 +64,7 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
          * @param index
          * @param nodeData
          */
-        public ConcreteNode(int index,N nodeData){
+        public NodeWithEdges(int index,N nodeData){
             super(index, nodeData);
             this.edges = null;
         }
@@ -116,7 +116,8 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
      * @param <N> Data type of a node contents.
      * @param <E> Data type of an edge contents.
      */
-    public static class OptimizedEdge<N, E> extends Edge<N,E>{
+    public static class OptimizedEdge<N, E> implements Edge<N,E>{
+        private final E data;
         private final Node<N> terminal;
         
         /**
@@ -126,13 +127,19 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
          * @param data 
          */
         public OptimizedEdge(E data, Node<N> terminal){
-            super(data);
+            super();
+            this.data = data;
             this.terminal = terminal;
         }
 
         @Override
         public Node<N> initialNode() {
             throw new UnsupportedOperationException("Not supported.");
+        }
+        
+        @Override
+        public E getData(){
+            return this.data;
         }
 
         @Override
@@ -231,7 +238,7 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
         
         @Override
         public void addNode(N nodeData) {
-            this.nodes.put(new Node<>(this.nodeCount.getAndIncrement(), nodeData), new ArrayList<>());
+            this.nodes.put(new ConcreteNode<>(this.nodeCount.getAndIncrement(), nodeData), new ArrayList<>());
         }
 
         @Override
@@ -246,13 +253,13 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
         @Override
         public AdjacencyListGraph<N, E> getGraph(){
             int numberOfEdges = this.numberOfEdges();
-            Stream<ConcreteNode<N, E>> concreteNodesStream = this.nodes.keySet().stream()
-                    .map(n->new ConcreteNode<>(n.index(), n.getData()));
-            List<ConcreteNode<N, E>> concreteNodes = concreteNodesStream.collect(Collectors.toList());
+            Stream<NodeWithEdges<N, E>> concreteNodesStream = this.nodes.keySet().stream()
+                    .map(n->new NodeWithEdges<>(n.index(), n.getData()));
+            List<NodeWithEdges<N, E>> concreteNodes = concreteNodesStream.collect(Collectors.toList());
 
             //this.nodes is a LinkedHashMap<>.
             //It keeps the order of entries.
-            Iterator<ConcreteNode<N, E>> newNodesIt = concreteNodes.iterator();
+            Iterator<NodeWithEdges<N, E>> newNodesIt = concreteNodes.iterator();
             for(Map.Entry<Node<N>, List<OptimizedEdge<N, E>>> ent : this.nodes.entrySet()){
                 newNodesIt.next().setEdges(
                     ent.getValue().stream()
@@ -264,9 +271,9 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
     }
     
     private final int numberOfEdges;
-    private final ImmutableVector<ConcreteNode<N, E>> nodes;
+    private final ImmutableVector<NodeWithEdges<N, E>> nodes;
     
-    private AdjacencyListGraph(int numberOfEdges, List<ConcreteNode<N, E>> nodes){
+    private AdjacencyListGraph(int numberOfEdges, List<NodeWithEdges<N, E>> nodes){
         super();
         this.numberOfEdges = numberOfEdges;
         this.nodes = new ArrayVector<>(nodes);
@@ -278,7 +285,7 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
     }
 
     @Override
-    public final ConcreteNode<N, E> getNode(int index) {
+    public final NodeWithEdges<N, E> getNode(int index) {
         return this.nodes.get(index);
     }
     
@@ -289,7 +296,7 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
 
     @Override
     public final Stream<Node<N>> getNodeStream() {
-        return this.nodes.stream().map(o->(ConcreteNode<N, E>)o);
+        return this.nodes.stream().map(o->(NodeWithEdges<N, E>)o);
     }
     
     @Override
@@ -300,20 +307,20 @@ public class AdjacencyListGraph<N, E> implements GenericGraph<N, E> {
     @Override
     @SuppressWarnings("unchecked")
     public final int numberOfEdges(Node<N> node) {
-        return ((ConcreteNode<N, E>)node).numberOfEdges();
+        return ((NodeWithEdges<N, E>)node).numberOfEdges();
     }
     
     @Override
     @SuppressWarnings("unchecked")
     public final Iterator<Edge<N, E>> getEdgeIterator(Node<N> node) {
-        final ConcreteNode<N, E> concreteNode = (ConcreteNode<N, E>)node;
+        final NodeWithEdges<N, E> concreteNode = (NodeWithEdges<N, E>)node;
         return new WrapEdgesIterator<>(concreteNode, concreteNode.getEdgeIterator());
     }
     
     @Override
     @SuppressWarnings("unchecked")
     public final Stream<Edge<N, E>> getEdgeStream(Node<N> node) {
-        return ((ConcreteNode<N, E>)node).getEdgeStream().map(opt->new ConcreteEdge<>(node, opt.getData(), opt.terminal));
+        return ((NodeWithEdges<N, E>)node).getEdgeStream().map(opt->new ConcreteEdge<>(node, opt.getData(), opt.terminal));
     }
     
     @Override

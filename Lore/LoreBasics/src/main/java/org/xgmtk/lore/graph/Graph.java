@@ -37,7 +37,30 @@ public interface Graph<N, E> {
      * 
      * @param <N> Data type of a node contents.
      */
-    public static class Node<N>{
+    public interface Node<N>{
+        
+        /**
+         * Get the index of the node.
+         * 
+         * @return The index of the node.
+         */
+        public int index();
+        
+        /**
+         * Get the data of the node.
+         * 
+         * @return The data of the node.
+         */
+        public N getData();
+    }
+    
+    /**
+     * 
+     * Concrete node type of the graph.
+     * 
+     * @param <N> Data type of a node contents.
+     */
+    public static class ConcreteNode<N> implements Node<N>{
         private final int index;
         private final N data;
         
@@ -47,35 +70,27 @@ public interface Graph<N, E> {
          * @param index
          * @param data 
          */
-        public Node(int index, N data){
+        public ConcreteNode(int index, N data){
             this.index = index;
             this.data = data;
         }
 
-        /**
-         * Get the index of the node.
-         * 
-         * @return The index of the node.
-         */
+        @Override
         public final int index(){
             return index;
         }
         
-        /**
-         * Get the data of the node.
-         * 
-         * @return The data of the node.
-         */
+        @Override
         public final N getData(){
             return this.data;
         }
 
         @Override
         public boolean equals(Object o){
-            if(!(o instanceof Node)){
+            if(!(o instanceof ConcreteNode)){
                 return false;
             }
-            Node n = (Node)o;
+            ConcreteNode n = (ConcreteNode)o;
             return Objects.equals(this.index, n.index) && 
                     Objects.equals(this.data, n.data);
         }
@@ -98,45 +113,28 @@ public interface Graph<N, E> {
      * @param <N> Data type of a node contents.
      * @param <E> Data type of an edge contents.
      */
-    public static abstract class Edge<N,E> {
-        private final E data;
-        
-        /**
-         * Initializer.
-         * 
-         * @param data The data of the edge.
-         */
-        public Edge(E data){
-            this.data = data;
-        }
+    public interface Edge<N,E> {
         
         /**
          * Get the initial node of the edge.
          * 
          * @return The initial node of the edge.
          */
-        public abstract Node<N> initialNode();
+        public Node<N> initialNode();
         
         /**
          * Get the terminal node of the edge.
          * 
          * @return The terminal node of the edge.
          */
-        public abstract Node<N> terminalNode();
+        public Node<N> terminalNode();
         
         /**
          * Get the data of the edge.
          * 
          * @return The data of the edge.
          */
-        public final E getData(){
-            return this.data;
-        }
-        
-        @Override
-        public String toString(){
-            return "{data: "+this.getData()+"}";
-        }
+        public E getData();
     }
     
     /**
@@ -145,8 +143,9 @@ public interface Graph<N, E> {
      * @param <N> Data type of a node contents.
      * @param <E> Data type of an edge contents.
      */
-    public static class ConcreteEdge<N,E> extends Edge<N,E>{
+    public static class ConcreteEdge<N,E> implements Edge<N,E>{
         private final Node<N> initialNode;
+        private final E data;
         private final Node<N> terminalNode;
         
         /**
@@ -157,7 +156,8 @@ public interface Graph<N, E> {
          * @param terminalNode 
          */
         public ConcreteEdge(Node<N> initialNode, E edgeData, Node<N> terminalNode){
-            super(edgeData);
+            super();
+            this.data = edgeData;
             this.initialNode = initialNode;
             this.terminalNode = terminalNode;
         }
@@ -166,10 +166,21 @@ public interface Graph<N, E> {
         public Node<N> initialNode() {
             return this.initialNode;
         }
+        
+        @Override
+        public E getData(){
+            return this.data;
+        }
 
         @Override
         public Node<N> terminalNode() {
             return this.terminalNode;
+        }
+        
+                
+        @Override
+        public String toString(){
+            return "{data: "+this.getData()+"}";
         }
     }
     

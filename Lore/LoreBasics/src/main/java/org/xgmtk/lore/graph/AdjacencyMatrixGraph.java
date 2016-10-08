@@ -92,7 +92,7 @@ public final class AdjacencyMatrixGraph<N, E> implements GenericGraph<N, E> {
 
         @Override
         public void addNode(N nodeData) {
-            this.nodes.add(new Node<>(nodeCount.getAndIncrement(), nodeData));
+            this.nodes.add(new ConcreteNode<>(nodeCount.getAndIncrement(), nodeData));
         }
         
         /**

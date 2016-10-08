@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.sameInstance;
-import org.hamcrest.Matcher;
 import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Rule;
@@ -56,37 +55,37 @@ public class TestAdjacencyListGraph {
         createGraph(builder, SAMPLE0_NODES, SAMPLE0_LINKS);
         assertGraph(SAMPLE0_NODES, SAMPLE0_LINKS, builder);
         builder.getNodeStream().forEach(n->{
-            assertThat(n, instanceOf(Graph.Node.class));
-            assertThat(n, not(instanceOf(AdjacencyListGraph.ConcreteNode.class)));
+            assertThat(n, instanceOf(Graph.ConcreteNode.class));
+            assertThat(n, not(instanceOf(AdjacencyListGraph.NodeWithEdges.class)));
             builder.getEdgeStream(n).forEach(e->{
                 assertThat(e.initialNode(), sameInstance(n));
-                assertThat(e.terminalNode(), instanceOf(Graph.Node.class));
-                assertThat(e.terminalNode(), not(instanceOf(AdjacencyListGraph.ConcreteNode.class)));
+                assertThat(e.terminalNode(), instanceOf(Graph.ConcreteNode.class));
+                assertThat(e.terminalNode(), not(instanceOf(AdjacencyListGraph.NodeWithEdges.class)));
             });
         });
         builder.getNodeIterator().forEachRemaining(n->{
-            assertThat(n, instanceOf(Graph.Node.class));
-            assertThat(n, not(instanceOf(AdjacencyListGraph.ConcreteNode.class)));
+            assertThat(n, instanceOf(Graph.ConcreteNode.class));
+            assertThat(n, not(instanceOf(AdjacencyListGraph.NodeWithEdges.class)));
             builder.getEdgeIterator(n).forEachRemaining(e->{
                 assertThat(e.initialNode(), sameInstance(n));
-                assertThat(e.terminalNode(), instanceOf(Graph.Node.class));
-                assertThat(e.terminalNode(), not(instanceOf(AdjacencyListGraph.ConcreteNode.class)));
+                assertThat(e.terminalNode(), instanceOf(Graph.ConcreteNode.class));
+                assertThat(e.terminalNode(), not(instanceOf(AdjacencyListGraph.NodeWithEdges.class)));
             });
         });
         Graph<SampleNodeData, SampleEdgeData> graph = builder.getGraph();
         assertGraph(SAMPLE0_NODES, SAMPLE0_LINKS, graph);
         graph.getNodeStream().forEach(n->{
-            assertThat(n, instanceOf(AdjacencyListGraph.ConcreteNode.class));
+            assertThat(n, instanceOf(AdjacencyListGraph.NodeWithEdges.class));
             graph.getEdgeStream(n).forEach(e->{
                 assertThat(e.initialNode(), sameInstance(n));
-                assertThat(e.terminalNode(), instanceOf(AdjacencyListGraph.ConcreteNode.class));
+                assertThat(e.terminalNode(), instanceOf(AdjacencyListGraph.NodeWithEdges.class));
             });
         });
         graph.getNodeIterator().forEachRemaining(n->{
-            assertThat(n, instanceOf(AdjacencyListGraph.ConcreteNode.class));
+            assertThat(n, instanceOf(AdjacencyListGraph.NodeWithEdges.class));
             graph.getEdgeIterator(n).forEachRemaining(e->{
                 assertThat(e.initialNode(), sameInstance(n));
-                assertThat(e.terminalNode(), instanceOf(AdjacencyListGraph.ConcreteNode.class));
+                assertThat(e.terminalNode(), instanceOf(AdjacencyListGraph.NodeWithEdges.class));
             });
         });
     }
